@@ -1,0 +1,8 @@
+{
+  "name": "desafio-gazin",
+  "version": "1.0.0",
+  "description": "desafio gazin",
+  "main": "index.js",
+  "author": "Guilherme Shinti <guilhermeshinti@gmail.com>",
+  "license": "MIT"
+}

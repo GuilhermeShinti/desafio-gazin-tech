@@ -9,10 +9,6 @@ const findAll = async (filters = {}) => {
         where: whereClause,
         include: Nivel,
     });
-
-    if (count === 0) {
-        throw new NotFoundError('Não há desenvolvedores cadastrados.');
-    }
     
     return {
         items: rows,

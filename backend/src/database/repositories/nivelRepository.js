@@ -6,10 +6,6 @@ const validateFilterFields = require('./validateFilterFieldsHelper');
 const findAll = async (filters = {}) => {
     const whereClause = validateFilterFields(filters, Nivel);
     const { count, rows } = await Nivel.findAndCountAll({where: whereClause});
-
-    if (count === 0) {
-        throw new NotFoundError('Não há níveis cadastrados.');
-    }
     
     return {
         items: rows,

@@ -1,10 +1,16 @@
 const NivelRepository = require('../database/repositories/nivelRepository');
+const { SuccessResponse, NotFoundResponse, NoContentResponse } = require('./responses');
 
 const list = async (req, res, next) => {
     try {
         const { ...filter } = req.query;
-        const result = await NivelRepository.findAll(filter);    
-        res.status(200).json(result);        
+        const result = await NivelRepository.findAll(filter);
+
+        if (result.total === 0) {
+            return NotFoundResponse('Não há níveis cadastrados.');
+        }
+
+        SuccessResponse(res, result);        
     } catch (error) {
         next(error);
     }
@@ -13,7 +19,7 @@ const list = async (req, res, next) => {
 const create = async (req, res, next) => {
     try {
         const level = await NivelRepository.createNivel(req.body);
-        res.status(200).json(level);
+        SuccessResponse(res, level);
     } catch (error) {    
         next(error);
     }
@@ -23,7 +29,7 @@ const update = async (req, res, next) => {
     try {
         const { id } = req.params;
         const level = await NivelRepository.updateNivel(id, req.body);
-        res.status(200).json(level);
+        SuccessResponse(res, level);
     } catch (error) {
         next(error);
     }
@@ -33,7 +39,7 @@ const remove = async (req, res, next) => {
     try {
         const { id } = req.params;
         await NivelRepository.removeNivel(id);
-        return res.sendStatus(204);
+        return NoContentResponse(res);
     } catch (error) {
         next(error);
     }

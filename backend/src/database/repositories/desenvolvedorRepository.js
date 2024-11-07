@@ -1,22 +1,30 @@
 const { NotFoundError } = require('../../utils/errors');
 const { Desenvolvedor, Nivel } = require('../models');
-const SequelizeValidationErrorHandler = require('./sequelizeValidationHandler');
+const SequelizeErrorHandler = require('./sequelizeErrorHandler');
+const validateFilterFields = require('./validateFilterFieldsHelper');
 
-const findAll = async () => {
-    const niveis = await Desenvolvedor.findAll({include:Nivel});
+const findAll = async (filters = {}) => {
+    const whereClause = validateFilterFields(filters, Desenvolvedor);
+    const { count, rows } = await Desenvolvedor.findAndCountAll({
+        where: whereClause,
+        include: Nivel,
+    });
 
-    if (niveis.length === 0) {
+    if (count === 0) {
         throw new NotFoundError('Não há desenvolvedores cadastrados.');
     }
     
-    return niveis; 
+    return {
+        items: rows,
+        total: count
+    }; 
 };
 
 const createDesenvolvedor = async (body) => {
     try {
         return await Desenvolvedor.create(body);    
     } catch (error) {
-        SequelizeValidationErrorHandler(error);
+        SequelizeErrorHandler(error);
         throw error;
     }    
 };
@@ -36,7 +44,7 @@ const updateDesenvolvedor = async (id, body) => {
         desenvolvedor.hobby = body.hobby;
         return await desenvolvedor.save();       
     } catch (error) {
-        SequelizeValidationErrorHandler(error);
+        SequelizeErrorHandler(error);
         throw error;
     }
 };

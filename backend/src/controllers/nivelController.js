@@ -2,8 +2,9 @@ const NivelRepository = require('../database/repositories/nivelRepository');
 
 const list = async (req, res, next) => {
     try {
-        const level = await NivelRepository.findAll(req.body);    
-        res.status(200).json(level);        
+        const { ...filter } = req.query;
+        const result = await NivelRepository.findAll(filter);    
+        res.status(200).json(result);        
     } catch (error) {
         next(error);
     }

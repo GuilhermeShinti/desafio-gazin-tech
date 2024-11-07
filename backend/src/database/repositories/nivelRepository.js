@@ -1,15 +1,20 @@
 const { NotFoundError } = require('../../utils/errors');
 const { Nivel } = require('../models');
 const SequelizeErrorHandler = require('./sequelizeErrorHandler');
+const validateFilterFields = require('./validateFilterFieldsHelper');
 
-const findAll = async (body) => {
-    const niveis = await Nivel.findAll();
+const findAll = async (filters = {}) => {
+    const whereClause = validateFilterFields(filters, Nivel);
+    const { count, rows } = await Nivel.findAndCountAll({where: whereClause});
 
-    if (niveis.length === 0) {
+    if (count === 0) {
         throw new NotFoundError('Não há níveis cadastrados.');
     }
     
-    return niveis; 
+    return {
+        items: rows,
+        total: count
+    }; 
 };
 
 const createNivel = async (body) => {

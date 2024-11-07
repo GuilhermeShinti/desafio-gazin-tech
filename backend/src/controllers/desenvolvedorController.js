@@ -2,7 +2,8 @@ const DesenvolvedorRepository = require('../database/repositories/desenvolvedorR
 
 const list = async (req, res, next) => {
     try {
-        const desenvolvedor = await DesenvolvedorRepository.findAll();    
+        const { ...filter } = req.query;
+        const desenvolvedor = await DesenvolvedorRepository.findAll(filter);    
         res.status(200).json(desenvolvedor);        
     } catch (error) {
         next(error);

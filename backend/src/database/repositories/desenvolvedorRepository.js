@@ -1,12 +1,9 @@
 const { NotFoundError } = require('../../utils/errors');
-const Desenvolvedor = require('../models/desenvolvedor');
-const Nivel = require('../models/nivel');
+const { Desenvolvedor, Nivel } = require('../models');
 const SequelizeValidationErrorHandler = require('./sequelizeValidationHandler');
 
 const findAll = async () => {
-    const niveis = await Desenvolvedor.findAll({
-        include: { model: Nivel },
-      });
+    const niveis = await Desenvolvedor.findAll({include:Nivel});
 
     if (niveis.length === 0) {
         throw new NotFoundError('Não há desenvolvedores cadastrados.');

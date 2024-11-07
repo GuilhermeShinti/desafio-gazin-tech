@@ -1,9 +1,9 @@
 const { NotFoundError } = require('../../utils/errors');
-const Nivel = require('../models/nivel');
+const { Nivel } = require('../models');
 const SequelizeValidationErrorHandler = require('./sequelizeValidationHandler');
 
 const findAll = async (body) => {
-    const niveis = await Nivel.findAll(body);
+    const niveis = await Nivel.findAll();
 
     if (niveis.length === 0) {
         throw new NotFoundError('Não há níveis cadastrados.');

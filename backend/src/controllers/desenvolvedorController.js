@@ -2,7 +2,7 @@ const DesenvolvedorRepository = require('../database/repositories/desenvolvedorR
 
 const list = async (req, res, next) => {
     try {
-        const desenvolvedor = await DesenvolvedorRepository.findAll(req.body);    
+        const desenvolvedor = await DesenvolvedorRepository.findAll();    
         res.status(200).json(desenvolvedor);        
     } catch (error) {
         next(error);

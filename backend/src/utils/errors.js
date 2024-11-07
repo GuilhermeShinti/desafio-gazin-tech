@@ -13,8 +13,17 @@ class NotFoundError extends Error {
       this.status = 404;
     }
 }
+
+class ConflitError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'ConflitError';
+      this.status = 409;
+    }
+}
   
 module.exports = {
     ValidationError,
-    NotFoundError
+    NotFoundError,
+    ConflitError
 };

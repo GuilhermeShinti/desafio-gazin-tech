@@ -1,6 +1,6 @@
 const { NotFoundError } = require('../../utils/errors');
 const { Nivel } = require('../models');
-const SequelizeValidationErrorHandler = require('./sequelizeValidationHandler');
+const SequelizeErrorHandler = require('./sequelizeErrorHandler');
 
 const findAll = async (body) => {
     const niveis = await Nivel.findAll();
@@ -38,13 +38,19 @@ const updateNivel = async (id, body) => {
 };
 
 const removeNivel = async (id) => {
-    const nivel = await Nivel.findOne({ where: { id } });
+    try {
+        const nivel = await Nivel.findOne({ where: { id } });
 
-    if (!nivel) {
-        throw new NotFoundError('Nível não encontrado.');
+        if (!nivel) {
+            throw new NotFoundError('Nível não encontrado.');
+        }
+
+        await nivel.destroy();    
+    } catch (error) {
+        SequelizeErrorHandler(error, Nivel);
+        throw error;
     }
 
-    nivel.destroy();
 };
 
 module.exports = {

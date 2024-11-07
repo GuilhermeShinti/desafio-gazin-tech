@@ -1,4 +1,4 @@
-docker compose up -d
+docker compose up --build -d
 
 
 npx sequelize-cli db:create

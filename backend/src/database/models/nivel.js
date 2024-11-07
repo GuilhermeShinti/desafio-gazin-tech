@@ -24,9 +24,5 @@ const Nivel = sequelize.define('Nivel', {
   }
 );
 
-// Nivel.associate = function(models) {
-//   Nivel.hasMany(models.Desenvolvedor, { foreignKey: 'nivel_id' });
-// };
-
 module.exports = Nivel;
   

@@ -17,7 +17,7 @@ const createNivel = async (body) => {
     try {
         return await Nivel.create(body);    
     } catch (error) {
-        SequelizeValidationErrorHandler(error);
+        SequelizeErrorHandler(error);
         throw error;
     }    
 };
@@ -33,7 +33,7 @@ const updateNivel = async (id, body) => {
         nivel.nivel = body.nivel;
         return await nivel.save();       
     } catch (error) {
-        SequelizeValidationErrorHandler(error);
+        SequelizeErrorHandler(error);
         throw error;
     }
 };

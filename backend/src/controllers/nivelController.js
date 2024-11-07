@@ -7,7 +7,7 @@ const list = async (req, res, next) => {
         const result = await NivelRepository.findAll(filter);
 
         if (result.total === 0) {
-            return NotFoundResponse('Não há níveis cadastrados.');
+            return NotFoundResponse(res, 'Não há níveis cadastrados.');
         }
 
         SuccessResponse(res, result);        

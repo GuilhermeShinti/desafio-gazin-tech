@@ -3,14 +3,14 @@ const Nivel = require('./nivel')(sequelize, DataTypes);
 const Desenvolvedor = require('./desenvolvedor')(sequelize, DataTypes);
 
 const models = {
-  Nivel,
-  Desenvolvedor
+    Nivel,
+    Desenvolvedor
 };
 
 Object.keys(models).forEach(modelName => {
-  if (models[modelName].associate) {
-    models[modelName].associate(models);
-  }
+    if (models[modelName]?.associate) {
+        models[modelName].associate(models);
+    }
 });
 
 models.sequelize = sequelize;

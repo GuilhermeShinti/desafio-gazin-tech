@@ -52,7 +52,7 @@ const removeDesenvolvedor = async (id) => {
         throw new NotFoundError('Desenvolvedor não encontrado.');
     }
 
-    desenvolvedor.destroy();   
+    await desenvolvedor.destroy();   
 };
 
 module.exports = {

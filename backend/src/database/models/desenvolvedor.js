@@ -39,14 +39,14 @@ module.exports = (sequelize, DataTypes) => {
         sexo: DataTypes.CHAR(1),
         data_nascimento: DataTypes.DATE,
         hobby: DataTypes.STRING
-        }, {
-            tableName: 'desenvolvedores',
-            timestamps: false,
-            hooks: {
-                beforeCreate: async (desenvolvedor, _) => ValidateNivel(desenvolvedor),
-                beforeUpdate: async (desenvolvedor, _) => ValidateNivel(desenvolvedor),
-            }
+    }, {
+        tableName: 'desenvolvedores',
+        timestamps: false,
+        hooks: {
+            beforeCreate: async (desenvolvedor, _) => ValidateNivel(desenvolvedor),
+            beforeUpdate: async (desenvolvedor, _) => ValidateNivel(desenvolvedor),
         }
+    }
     );
 
     Desenvolvedor.associate = function (models) {

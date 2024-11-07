@@ -11,10 +11,14 @@ export default [
             "no-unused-vars": ["error", { "argsIgnorePattern": "^_|next" }],
             "no-undef": "error",
             "no-useless-catch": "error",
+            "indent": ["error", 4]
         },
     },
     {
-        languageOptions: { globals: globals.node }
+        languageOptions: { globals: {
+            ...globals.node,
+            ...globals.jest
+        } }
     },
 
     pluginJs.configs.recommended,

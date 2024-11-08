@@ -29,16 +29,33 @@ describe('DesenvolvedorRepository Integration Tests', () => {
     });
 
     describe('findAll', () => {
-        it('should return all desenvolvedores', async () => {
-            const nivel = await Models.Nivel.create({ nivel: 'junior' });
-            debugger
-            const desenvolvedor = newDesenvolvedor(nivel.id);
-            await createDesenvolvedor(desenvolvedor);
-            const result = await findAll();
+        let desenvolvedor1;
+        let desenvolvedor2;
+        let desenvolvedor3;
 
-            expect(result.items.length).toBe(1);
-            expect(result.items[0].nome).toBe(desenvolvedor.nome);
+        beforeEach(async () => {
+            const nivel = await Models.Nivel.create({ nivel: 'junior' });
+            desenvolvedor1 = await createDesenvolvedor(newDesenvolvedor(nivel.id));
+            desenvolvedor2 = await createDesenvolvedor(newDesenvolvedor(nivel.id));
+            desenvolvedor3 = await createDesenvolvedor(newDesenvolvedor(nivel.id));
         });
+
+        it('should return all desenvolvedores', async () => {
+            const result = await findAll();
+            expect(result.items.length).toBe(3);
+        });
+        
+        it('should return by id', async () => {
+            const expectedId = desenvolvedor2.id;
+            const result = await findAll({ id: expectedId });
+            expect(result.items[0].id).toBe(expectedId);
+        });
+        
+        it('should return by nome', async () => {
+            const expectedNome = desenvolvedor3.nome;
+            const result = await findAll({ nome: expectedNome });
+            expect(result.items[0].nome).toBe(expectedNome);
+        });   
     });
 
     describe('createDesenvolvedor', () => {

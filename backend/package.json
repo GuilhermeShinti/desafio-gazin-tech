@@ -1,7 +1,7 @@
 {
-  "name": "desafio-gazin",
+  "name": "desafio-gazin-backend",
   "version": "1.0.0",
-  "description": "desafio gazin",
+  "description": "desafio gazin backend",
   "main": "src/app.js",
   "author": "Guilherme Shinti <guilhermeshinti@gmail.com>",
   "license": "MIT",

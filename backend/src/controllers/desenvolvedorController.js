@@ -1,16 +1,18 @@
 const DesenvolvedorRepository = require('../database/repositories/desenvolvedorRepository');
-const { SuccessResponse, NotFoundResponse, NoContentResponse } = require('./responses');
+const { SuccessfulPagedResponse, SuccessResponse, NotFoundResponse, NoContentResponse } = require('./responses');
 
 const list = async (req, res, next) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const perPage = parseInt(req.query.perPage) || 10;
         const { ...filter } = req.query;
-        const result = await DesenvolvedorRepository.findAll(filter);   
+        const result = await DesenvolvedorRepository.findAll(page, perPage, filter);   
         
         if (result.count === 0) {
-            return NotFoundResponse(res, 'Não há desenvolvedores cadastrados.');
+            return NotFoundResponse(res, 'Nenhum desenvolvedor encontrado.');
         }
 
-        SuccessResponse(res, result);        
+        return SuccessfulPagedResponse(res, result, page, perPage);      
     } catch (error) {
         next(error);
     }

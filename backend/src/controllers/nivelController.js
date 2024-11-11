@@ -1,16 +1,18 @@
 const NivelRepository = require('../database/repositories/nivelRepository');
-const { SuccessResponse, NotFoundResponse, NoContentResponse } = require('./responses');
+const { SuccessfulPagedResponse, SuccessResponse, NotFoundResponse, NoContentResponse } = require('./responses');
 
 const list = async (req, res, next) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const perPage = parseInt(req.query.perPage) || 10;
         const { ...filter } = req.query;
-        const result = await NivelRepository.findAll(filter);
+        const result = await NivelRepository.findAll(page, perPage, filter);
 
-        if (result.total === 0) {
-            return NotFoundResponse(res, 'Não há níveis cadastrados.');
+        if (result.count === 0) {
+            return NotFoundResponse(res, 'Nenhum nível encontrado.');
         }
 
-        SuccessResponse(res, result);        
+        return SuccessfulPagedResponse(res, result, page, perPage);  
     } catch (error) {
         next(error);
     }

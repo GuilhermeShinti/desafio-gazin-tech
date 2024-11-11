@@ -3,17 +3,20 @@ const { Desenvolvedor, Nivel } = require('../models');
 const SequelizeErrorHandler = require('./sequelizeErrorHandler');
 const validateFilterFields = require('./validateFilterFieldsHelper');
 
-const findAll = async (filters = {}) => {
+const findAll = async (page = 1, perPage = 10, filters = {}) => {
+    const offset = (page - 1) * perPage;
     const whereClause = validateFilterFields(filters, Desenvolvedor);
     const { count, rows } = await Desenvolvedor.findAndCountAll({
         where: whereClause,
         include: Nivel,
+        limit: perPage,
+        offset: offset
     });
     
     return {
-        items: rows,
-        total: count
-    }; 
+        rows,
+        count
+    };
 };
 
 const createDesenvolvedor = async (body) => {

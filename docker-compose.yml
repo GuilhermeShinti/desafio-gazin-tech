@@ -20,3 +20,13 @@ services:
       GAZIN_DB_PASSWORD: gazin
     ports:
       - "3000:3000"
+
+  frontend:
+    build: ./frontend/.
+    # command: ["./wait-for-it.sh", "postgres:5432", "--", "npm", "start"]
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3001:3001"

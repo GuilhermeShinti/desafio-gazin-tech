@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 // import NivelForm from '../components/NivelForm';
 
@@ -8,20 +8,19 @@ function Niveis() {
     const [editingNivel, setEditingNivel] = useState(null);
     const [error, setError] = useState(null);
 
+    const fetchNiveis = useCallback(async () => {
+        try {
+            const response = await api.get(nivelsPath);
+            setNiveis(response.data.data);    
+        } catch (err) {
+            console.log('Error:', err.response?.data?.message);
+            showError(err.response?.data?.message);
+        }
+    }, []);
 
-  useEffect(() => {
-    fetchNiveis();
-  }, []);
-
-  const fetchNiveis = async () => {
-    try {
-        const response = await api.get(nivelsPath);
-        setNiveis(response.data.data);    
-    } catch (err) {
-        console.debug('Error:', error.response.data.message);
-        setError(err);
-    }
-  };
+    useEffect(() => {
+        fetchNiveis();
+    }, [fetchNiveis]);
 
   const handleAdd = async (nivel) => {
     await api.post(nivelsPath, nivel);
@@ -34,15 +33,32 @@ function Niveis() {
   };
 
   const handleDelete = async (id) => {
-    await api.delete(`${nivelsPath}/${id}`);
-    fetchNiveis();
+    try {
+        await api.delete(`${nivelsPath}/${id}`);
+        setNiveis(niveis.filter(nivel => nivel.id !== id));
+    } catch (err) {
+        console.log('Error:', err.response?.data?.message);
+        showError(err.response?.data?.message);
+    }
   };
 
+    const showError = (message) => {
+        setError(message);
+        setTimeout(() => {
+            setError(null);
+        }, 3000); 
+    };  
+
   return (
-    <div>
+    <div className='table-responsive'>
       <h1>Níveis</h1>
+      {error && (
+            <div className="alert alert-danger" role="alert">
+                {error}
+            </div>      
+        )}          
       {/* <NivelForm onSubmit={editingNivel ? handleEdit : handleAdd} nivel={editingNivel} /> */}
-      <table>
+      <table className='table table-striped  table-bordered align-middle'>
         <thead>
           <tr>
             <th>ID</th>
@@ -51,18 +67,37 @@ function Niveis() {
           </tr>
         </thead>
         <tbody>
-          {niveis.map(nivel => (
-            <tr key={nivel.id}>
-              <td>{nivel.id}</td>
-              <td>{nivel.nivel}</td>
-              <td>
-                <button onClick={() => setEditingNivel(nivel)}>Editar</button>
-                <button onClick={() => handleDelete(nivel.id)}>Remover</button>
-              </td>
-            </tr>
-          ))}
+            {niveis.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="text-center">Nenhum nível encontrado.</td>
+              </tr>
+            ) : (
+                niveis.map(nivel => (
+                <tr key={nivel.id}>
+                <td className='col-1'>{nivel.id}</td>
+                <td className='col-8'>{nivel.nivel}</td>
+                <td className='col-3'>
+                  <button type="button" className="btn btn-warning" onClick={() => setEditingNivel(nivel)}>Editar</button>
+                  <button type="button" className="btn btn-danger" onClick={() => handleDelete(nivel.id)}>Remover</button>
+                </td>
+              </tr>
+              ))
+            )}          
         </tbody>
       </table>
+        <nav aria-label="...">
+            <ul className="pagination justify-content-end">
+                <li className="page-item disabled">
+                    <button className="page-link" aria-disabled="true">Previous</button>
+                </li>
+                <li className="page-item disabled">
+                    <button className="page-link">1</button>
+                </li>
+                <li className="page-item disabled">
+                    <button className="page-link">Next</button>
+                </li>
+            </ul>
+        </nav>
     </div>
   );
 }

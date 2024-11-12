@@ -1,18 +1,18 @@
 import React from 'react';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, NavLink } from 'react-router-dom';
 import Nivels from './pages/Niveis';
 import Desenvolvedores from './pages/Desenvolvedores';
 
 function App() {
   return (
-    <div>
-      <nav>
-        <ul>
-          <li><Link to="/niveis">Níveis</Link></li>
-          <li><Link to="/desenvolvedores">Desenvolvedores</Link></li>
+    <div className="container">
+      <nav className='navbar navbar-expand-lg navbar-light bg-light'>
+        <ul className='navbar-nav'>
+          <li className='nav-item'><NavLink to="/niveis" className={({ isActive }) => (isActive ? 'btn btn-primary' : 'btn')}>Níveis</NavLink></li>
+          <li className='nav-item'><NavLink to="/desenvolvedores" className={({ isActive }) => (isActive ? 'btn btn-primary' : 'btn')}>Desenvolvedores</NavLink></li>
         </ul>
       </nav>
-      <Routes>
+      <Routes className="container">
         <Route path="/niveis" element={<Nivels/>} />
         <Route path="/desenvolvedores" element={<Desenvolvedores/>} />
       </Routes>

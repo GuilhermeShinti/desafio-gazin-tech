@@ -1,9 +1,16 @@
 const DesenvolvedorRepository = require('../../../src/database/repositories/desenvolvedorRepository');
 const { list, create, update, remove } = require('../../../src/controllers/desenvolvedorController');
-const { SuccessResponse, NotFoundResponse, NoContentResponse } = require('../../../src/controllers/responses');
+const { SuccessResponse, NotFoundResponse, NoContentResponse, SuccessfulPagedResponse } = require('../../../src/controllers/responses');
 
 jest.mock('../../../src/database/repositories/desenvolvedorRepository');
 jest.mock('../../../src/controllers/responses');
+
+const meta = {
+    current_page: 10,
+    last_page: 1,
+    per_page: 1,
+    total: 1,
+}
 
 describe('DesenvolvedorController', () => {
     let req;
@@ -11,7 +18,7 @@ describe('DesenvolvedorController', () => {
     let next;
 
     beforeEach(() => {
-        req = { params: {}, query: {}, body: {} };
+        req = { params: {}, query: { page: 1, perPage: 10}, body: {} };
         res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
@@ -25,16 +32,18 @@ describe('DesenvolvedorController', () => {
 
             await list(req, res, next);
 
-            expect(NotFoundResponse).toHaveBeenCalledWith(res, 'Não há desenvolvedores cadastrados.');
+            expect(NotFoundResponse).toHaveBeenCalledWith(res, 'Nenhum desenvolvedor encontrado.');
         });
 
         it('should return 200 and desenvolvedores if found', async () => {
-            const desenvolvedores = { count: 1, rows: [{ id: 1, nome: 'John Doe' }] };
-            DesenvolvedorRepository.findAll.mockResolvedValue(desenvolvedores);
+            const desenvolvedor = { id: 1, nome: 'John Doe' };
+            const result = { count: 1, rows: [desenvolvedor] };
+            DesenvolvedorRepository.findAll.mockResolvedValue(result);
 
+            debugger
             await list(req, res, next);
 
-            expect(SuccessResponse).toHaveBeenCalledWith(res, desenvolvedores);
+            expect(SuccessfulPagedResponse).toHaveBeenCalledWith(res, result, 1, 10);
         });
     });
 

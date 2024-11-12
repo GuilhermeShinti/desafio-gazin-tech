@@ -1,6 +1,9 @@
 const { findAll, createNivel, updateNivel, removeNivel } = require('../../../../src/database/repositories/nivelRepository');
 const { Nivel } = require('../../../../src/database/models');
 
+const page = 1;
+const perPage = 10;
+
 beforeAll(async () => {
     await Nivel.sequelize.authenticate();
     await Nivel.sync({ force: true });
@@ -27,20 +30,20 @@ describe('NivelRepository Integration Tests', () => {
         });
 
         it('should return all levels', async () => {
-            const result = await findAll();
-            expect(result.items.length).toBe(3);
+            const result = await findAll(page, perPage);
+            expect(result.rows.length).toBe(3);
         });
 
         it('should return by id', async () => {
-            const expectedId = nivel2.id;
-            const result = await findAll({ id: expectedId });
-            expect(result.items[0].id).toBe(expectedId);
+            const expectedId = nivel2.id;            
+            const result = await findAll(page, perPage, { id: expectedId });
+            expect(result.rows[0].id).toBe(expectedId);
         });
         
         it('should return by nivel', async () => {
             const expectedNivel = nivel3.nivel;
-            const result = await findAll({ nivel: expectedNivel });
-            expect(result.items[0].nivel).toBe(expectedNivel);
+            const result = await findAll(page, perPage, { nivel: expectedNivel });
+            expect(result.rows[0].nivel).toBe(expectedNivel);
         });             
     });
 

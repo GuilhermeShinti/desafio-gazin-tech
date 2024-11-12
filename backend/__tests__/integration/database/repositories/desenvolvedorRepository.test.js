@@ -2,6 +2,9 @@ const { findAll, createDesenvolvedor, updateDesenvolvedor, removeDesenvolvedor }
 const Models = require('../../../../src/database/models');
 const { faker } = require('@faker-js/faker');
 
+const page = 1;
+const perPage = 10;
+
 const newDesenvolvedor = (nivelId) => {
     return {
         nome: faker.person.firstName(),
@@ -41,20 +44,20 @@ describe('DesenvolvedorRepository Integration Tests', () => {
         });
 
         it('should return all desenvolvedores', async () => {
-            const result = await findAll();
-            expect(result.items.length).toBe(3);
+            const result = await findAll(page, perPage);
+            expect(result.rows.length).toBe(3);
         });
         
         it('should return by id', async () => {
             const expectedId = desenvolvedor2.id;
-            const result = await findAll({ id: expectedId });
-            expect(result.items[0].id).toBe(expectedId);
+            const result = await findAll(page, perPage, { id: expectedId });
+            expect(result.rows[0].id).toBe(expectedId);
         });
         
         it('should return by nome', async () => {
             const expectedNome = desenvolvedor3.nome;
-            const result = await findAll({ nome: expectedNome });
-            expect(result.items[0].nome).toBe(expectedNome);
+            const result = await findAll(page, perPage, { nome: expectedNome });
+            expect(result.rows[0].nome).toBe(expectedNome);
         });   
     });
 
@@ -102,9 +105,9 @@ describe('DesenvolvedorRepository Integration Tests', () => {
 
             const desenvolvedor = await createDesenvolvedor(newDesenvolvedor(nivel.id));
             await removeDesenvolvedor(desenvolvedor.id);
-            const desenvolvedores = await findAll({ query: { id: desenvolvedor.id } });
+            const desenvolvedores = await findAll(page, perPage, { query: { id: desenvolvedor.id } });
 
-            expect(desenvolvedores.total).toBe(0);
+            expect(desenvolvedores.count).toBe(0);
         });
 
         it('should throw NotFoundError if desenvolvedor does not exist', async () => {

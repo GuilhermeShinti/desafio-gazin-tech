@@ -4,13 +4,20 @@ const { ValidationError, ConflitError } = require('../../../src/utils/errors');
 
 jest.mock('../../../src/database/repositories/nivelRepository');
 
+const meta = {
+    current_page: 10,
+    last_page: 1,
+    per_page: 1,
+    total: 1,
+}
+
 describe('NivelController', () => {
     let req;
     let res;
     let next;
 
     beforeEach(() => {
-        req = { body: {}, query: {}, params: {} };
+        req = { body: {}, query: { page: 1, perPage: 10 }, params: {} };
         res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
@@ -21,22 +28,24 @@ describe('NivelController', () => {
     
     describe('list', () => {
         it('should return 404 if no levels are found', async () => {
-            NivelRepository.findAll.mockResolvedValue({ items: [], total: 0 });
+            NivelRepository.findAll.mockResolvedValue({ rows: [], count: 0 });
 
             await list(req, res, next);
 
             expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ message: 'Não há níveis cadastrados.' });
+            expect(res.json).toHaveBeenCalledWith({ message: 'Nenhum nível encontrado.' });
         });
 
         it('should return 200 and levels if found', async () => {
-            const niveis = [{ id: 1, nivel: 'junior' }];
-            NivelRepository.findAll.mockResolvedValue(niveis);
+            const nivel = { id: 1, nivel: 'junior' };
+            const mockResult = { rows: [nivel], count: 1 };
+            NivelRepository.findAll.mockResolvedValue(mockResult);
 
+            debugger
             await list(req, res, next);
 
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith(niveis);
+            expect(res.json).toHaveBeenCalledWith({ data: [nivel], meta });
         });
     });
 

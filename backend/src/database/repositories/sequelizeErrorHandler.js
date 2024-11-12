@@ -8,7 +8,7 @@ const SequelizeErrorHandler = function (error, model) {
 
     if (error.name === 'SequelizeForeignKeyConstraintError') {
         const associatedTable = Object.values(model.associations)[0].target.tableName;
-        const message = `Não é possível excluir o registro, pois ele está associado a um ou mais registros em ${associatedTable}.`;
+        const message = `Não foi possível excluir o registro, pois ele está associado a um ou mais registros em ${associatedTable}.`;
         throw new ConflitError(message);
     }
 }

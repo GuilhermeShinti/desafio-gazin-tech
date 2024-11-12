@@ -7,13 +7,13 @@ const SuccessResponse = (res, teste) => {
 }
 
 const NoContentResponse = (res) => {
-    return res.status(204);
+    return res.status(204).send();
 }
 
 const SuccessfulPagedResponse = (res, data, page, perPage) => {
     return res.status(200).json(
         {
-            data: data.count === 0 ? [] : data.rows, // Array de desenvolvedores ou níveis
+            data: data.count === 0 ? [] : data.rows,
             meta: {
               total: data.count,
               per_page: page,

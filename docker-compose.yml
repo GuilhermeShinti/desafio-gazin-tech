@@ -28,5 +28,6 @@ services:
       - backend
     environment:
       NODE_ENV: development
+      GAZIN_SERVER_HOST: backend
     ports:
       - "3001:80"

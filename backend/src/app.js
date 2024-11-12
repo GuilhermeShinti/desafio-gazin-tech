@@ -7,6 +7,8 @@ const port = 3000;
 
 app.disable('etag');
 app.use(express.json());
+app.use(cors());
+
 setupRoutes(app);
 
 app.use(errorHandler);

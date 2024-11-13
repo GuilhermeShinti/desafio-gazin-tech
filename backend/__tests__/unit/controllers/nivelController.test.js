@@ -40,8 +40,7 @@ describe('NivelController', () => {
             const nivel = { id: 1, nivel: 'junior' };
             const mockResult = { rows: [nivel], count: 1 };
             NivelRepository.findAll.mockResolvedValue(mockResult);
-
-            debugger
+            
             await list(req, res, next);
 
             expect(res.status).toHaveBeenCalledWith(200);

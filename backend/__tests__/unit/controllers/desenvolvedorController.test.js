@@ -40,7 +40,6 @@ describe('DesenvolvedorController', () => {
             const result = { count: 1, rows: [desenvolvedor] };
             DesenvolvedorRepository.findAll.mockResolvedValue(result);
 
-            debugger
             await list(req, res, next);
 
             expect(SuccessfulPagedResponse).toHaveBeenCalledWith(res, result, 1, 10);
